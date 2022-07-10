@@ -114,4 +114,10 @@ public class Titulo {
     return true;
   }
 
+  @Override
+  public String toString() {
+    return "Titulo [codigo=" + codigo + ", dataVencimento=" + dataVencimento + ", descricao=" + descricao + ", status="
+        + status + ", valor=" + valor + "]";
+  }
+
 }
