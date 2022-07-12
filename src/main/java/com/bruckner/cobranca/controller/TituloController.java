@@ -35,6 +35,7 @@ public class TituloController {
 
     @RequestMapping
     public ModelAndView pesquisar() {
+        System.out.println("PESQUISAR");
         List<Titulo> titulos = titulosRepository.findAll();
 
         ModelAndView mv = new ModelAndView("PesquisaTitulos");
@@ -45,6 +46,7 @@ public class TituloController {
 
     @RequestMapping("{id}")
     public ModelAndView editar(@PathVariable Long id) {
+        System.out.println("EDITAR");
         Optional<Titulo> tituloOpt = titulosRepository.findById(id);
         ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 
@@ -61,6 +63,7 @@ public class TituloController {
 
     @RequestMapping("/novo")
     public ModelAndView novo() {
+        System.out.println("NOVO");
         ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
         mv.addObject(new Titulo());
         return mv;
@@ -68,7 +71,7 @@ public class TituloController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String salvar(@Validated Titulo titulo, Errors errors, RedirectAttributes attributes) {
-        System.out.println(titulo);
+        System.out.println("SALVAR");
         if (errors.hasErrors()) {
             return "CadastroTitulo";
         }
@@ -80,5 +83,15 @@ public class TituloController {
         attributes.addFlashAttribute("mensagem", mensagemSucesso);
 
         return "redirect:/titulos/novo";
+    }
+
+    @RequestMapping(value = "{codigo}", method = RequestMethod.DELETE)
+    public String excluir(@PathVariable Long codigo, RedirectAttributes attributes) {
+        System.out.println("EXCLUIR");
+        Titulo titulo = titulosRepository.findById(codigo).get();
+        titulosRepository.delete(titulo);
+
+        attributes.addFlashAttribute("mensagem", "Titulo excluído com sucesso!");
+        return "redirect:/titulos";
     }
 }
