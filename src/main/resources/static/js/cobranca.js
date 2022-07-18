@@ -22,3 +22,7 @@ $("#confirmacaoExclusaoModal").on("show.bs.modal", function (event) {
         " </strong>"
     );
 });
+
+$(function () {
+  $('[rel="tooltip"]').tooltip();
+});
