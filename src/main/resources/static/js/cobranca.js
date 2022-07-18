@@ -6,16 +6,13 @@ $("#confirmacaoExclusaoModal").on("show.bs.modal", function (event) {
 
   var modal = $(this);
   var form = modal.find("form");
-  var action = form.attr("action");
+  var action = form.data("url-base");
 
-  //corrigindo um bug ao clicar em excluir e desistir.
-  //o js estava adicionando o id mais de uma vez
-
-  if (!action.endsWith("/titulos")) {
-    action = "/titulos";
+  if (!action.endsWith("/")) {
+    action += "/";
   }
 
-  form.attr("action", action + "/" + codigoTitulo);
+  form.attr("action", action + codigoTitulo);
 
   modal
     .find(".modal-body span")
