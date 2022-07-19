@@ -18,14 +18,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.bruckner.cobranca.model.StatusTitulo;
 import com.bruckner.cobranca.model.Titulo;
-import com.bruckner.cobranca.repository.TitulosRepository;
+import com.bruckner.cobranca.service.CadastroTituloService;
 
 @Controller
 @RequestMapping("/titulos")
 public class TituloController {
 
+    // @Autowired
+    // private TitulosRepository titulosRepository;
+
     @Autowired
-    private TitulosRepository titulosRepository;
+    private CadastroTituloService tituloService;
 
     private static final String CADASTRO_VIEW = "CadastroTitulo";
 
@@ -37,7 +40,7 @@ public class TituloController {
     @RequestMapping
     public ModelAndView pesquisar() {
         System.out.println("PESQUISAR");
-        List<Titulo> titulos = titulosRepository.findAll();
+        List<Titulo> titulos = tituloService.buscarTodos();
 
         ModelAndView mv = new ModelAndView("PesquisaTitulos");
         mv.addObject("titulos", titulos);
@@ -48,7 +51,7 @@ public class TituloController {
     @RequestMapping("{id}")
     public ModelAndView editar(@PathVariable Long id) {
         System.out.println("EDITAR");
-        Optional<Titulo> tituloOpt = titulosRepository.findById(id);
+        Optional<Titulo> tituloOpt = tituloService.buscarPorId(id);
         ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 
         if (tituloOpt.isPresent()) {
@@ -81,7 +84,7 @@ public class TituloController {
             String mensagemSucesso = (null == titulo.getCodigo()) ? "Titulo salvo com sucesso!"
                     : "Titulo atualizado com sucesso!";
 
-            titulosRepository.save(titulo);
+            tituloService.salvar(titulo);
             attributes.addFlashAttribute("mensagem", mensagemSucesso);
 
             return "redirect:/titulos/novo";
@@ -95,8 +98,8 @@ public class TituloController {
     @RequestMapping(value = "{codigo}", method = RequestMethod.DELETE)
     public String excluir(@PathVariable Long codigo, RedirectAttributes attributes) {
         System.out.println("EXCLUIR");
-        Titulo titulo = titulosRepository.findById(codigo).get();
-        titulosRepository.delete(titulo);
+        Titulo titulo = tituloService.buscarPorId(codigo).get();
+        tituloService.apagarTitulo(titulo);
 
         attributes.addFlashAttribute("mensagem", "Titulo excluído com sucesso!");
         return "redirect:/titulos";
