@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
@@ -76,13 +77,19 @@ public class TituloController {
             return "CadastroTitulo";
         }
 
-        String mensagemSucesso = (null == titulo.getCodigo()) ? "Titulo salvo com sucesso!"
-                : "Titulo atualizado com sucesso!";
+        try {
+            String mensagemSucesso = (null == titulo.getCodigo()) ? "Titulo salvo com sucesso!"
+                    : "Titulo atualizado com sucesso!";
 
-        titulosRepository.save(titulo);
-        attributes.addFlashAttribute("mensagem", mensagemSucesso);
+            titulosRepository.save(titulo);
+            attributes.addFlashAttribute("mensagem", mensagemSucesso);
 
-        return "redirect:/titulos/novo";
+            return "redirect:/titulos/novo";
+        } catch (DataIntegrityViolationException e) {
+            errors.rejectValue("dataVencimento", null, "Formato de data inválido");
+            return CADASTRO_VIEW;
+        }
+
     }
 
     @RequestMapping(value = "{codigo}", method = RequestMethod.DELETE)
