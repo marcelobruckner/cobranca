@@ -88,8 +88,8 @@ public class TituloController {
             attributes.addFlashAttribute("mensagem", mensagemSucesso);
 
             return "redirect:/titulos/novo";
-        } catch (DataIntegrityViolationException e) {
-            errors.rejectValue("dataVencimento", null, "Formato de data inválido");
+        } catch (IllegalArgumentException e) {
+            errors.rejectValue("dataVencimento", null, e.getMessage());
             return CADASTRO_VIEW;
         }
 

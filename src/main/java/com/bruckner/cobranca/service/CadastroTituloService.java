@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.bruckner.cobranca.model.Titulo;
@@ -24,7 +25,11 @@ public class CadastroTituloService {
   }
 
   public Titulo salvar(Titulo titulo) {
-    return titulosRepository.save(titulo);
+    try {
+      return titulosRepository.save(titulo);
+    } catch (DataIntegrityViolationException e) {
+      throw new IllegalArgumentException("Formato de data inválido");
+    }
   }
 
   public void apagarTitulo(Titulo titulo) {
