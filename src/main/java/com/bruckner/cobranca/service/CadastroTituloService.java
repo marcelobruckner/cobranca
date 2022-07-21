@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.bruckner.cobranca.model.StatusTitulo;
 import com.bruckner.cobranca.model.Titulo;
 import com.bruckner.cobranca.repository.TitulosRepository;
+import com.bruckner.cobranca.repository.filter.TituloFilter;
 
 @Service
 public class CadastroTituloService {
@@ -43,5 +44,10 @@ public class CadastroTituloService {
     titulosRepository.save(titulo);
 
     return StatusTitulo.RECEBIDO.getDescricao();
+  }
+
+  public List<Titulo> filtrar(TituloFilter filtro) {
+    String descricao = filtro.getDescricao() == null ? "" : filtro.getDescricao();
+    return titulosRepository.findByDescricaoContaining(descricao);
   }
 }
