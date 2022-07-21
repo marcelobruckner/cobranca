@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.bruckner.cobranca.model.StatusTitulo;
 import com.bruckner.cobranca.model.Titulo;
 import com.bruckner.cobranca.repository.TitulosRepository;
 
@@ -34,5 +35,13 @@ public class CadastroTituloService {
 
   public void apagarTitulo(Titulo titulo) {
     titulosRepository.delete(titulo);
+  }
+
+  public String receber(Long codigo) {
+    Titulo titulo = titulosRepository.getReferenceById(codigo);
+    titulo.setStatus(StatusTitulo.RECEBIDO);
+    titulosRepository.save(titulo);
+
+    return StatusTitulo.RECEBIDO.getDescricao();
   }
 }

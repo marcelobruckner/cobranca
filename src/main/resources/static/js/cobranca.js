@@ -30,4 +30,29 @@ $(function () {
     thousands: ".",
     allowZero: true,
   });
+
+  $(".js-atualizar-status").on("click", function (event) {
+    event.preventDefault();
+
+    var botaoReceber = $(event.currentTarget);
+    var urlReceber = botaoReceber.attr("href");
+
+    var response = $.ajax({ url: urlReceber, type: "PUT" });
+
+    response.done(function (e) {
+      var codigoTitulo = botaoReceber.data("codigo");
+      //mudar o status do titulo
+      $("[data-role=" + codigoTitulo + "]").html(
+        '<span class="label label-success">' + e + "</span>"
+      );
+
+      //sumir com o botao de recebimento
+      botaoReceber.hide();
+    });
+
+    response.fail(function (e) {
+      console.log(e);
+      alert("Erro ao receber cobrança");
+    });
+  });
 });
